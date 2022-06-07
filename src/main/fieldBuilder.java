@@ -7,7 +7,8 @@ import java.io.IOException;
 
 public class fieldBuilder{
 	
-	public static int[][] makeField(String seed, String race) {
+	public static int[][] makeField(String seed, String race, int size) {
+		
 		try (FileReader reader = new FileReader("src\\main\\resourses\\rules.txt")){
         Scanner scan = new Scanner(reader);
         
@@ -18,12 +19,12 @@ public class fieldBuilder{
 
         int race_index = Arrays.asList(race_name).indexOf(race);
         if(race_index != -1)
-        for(int i = 0; i < race_index; i++)
-            scan.nextLine();
+        	for(int i = 0; i < race_index; i++)
+        		scan.nextLine();
         else 
         	{
-        	scan.close();
-        	throw new IllegalArgumentException("Race is not valid");
+        		scan.close();
+        		throw new IllegalArgumentException("Race is not valid");
         	}
         
         int[] travel_cost = new int[terrain_type.length()];
@@ -33,11 +34,11 @@ public class fieldBuilder{
 
 
         int terrain_index = 0;
-        int[][] field = new int[4][4];
-            for(int i=0; i<4; i++)
-                for(int j=0; j<4; j++)
+        int[][] field = new int[size][size];
+            for(int i=0; i<size; i++)
+                for(int j=0; j<size; j++)
                 {
-                	terrain_index = terrain_type.indexOf(seed.charAt(4*i+j));
+                	terrain_index = terrain_type.indexOf(seed.charAt(size*i+j));
             		if(terrain_index != -1)
                     field[i][j] = travel_cost[terrain_index];
             		else

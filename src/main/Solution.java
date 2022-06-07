@@ -1,13 +1,17 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class Solution {
       
     public static int getResult(String seed, String race) {
     
-    if(seed.length() != 16)
-    	throw new IllegalArgumentException("Seed is not valid");
-    int[][] field = fieldBuilder.makeField(seed, race);
-    
+    int size = (int)Math.sqrt(seed.length());
+
+    int[][] field = fieldBuilder.makeField(seed, race, size);
+    /*
     for(int i=0; i<4;i++)
         {
         for(int j=0; j<4;j++)
@@ -21,6 +25,61 @@ public class Solution {
         }                  
 
     return field[3][3];
+        */
+    
+
+    
+    Grid grid = new Grid(size, field);
+    Node startNode = grid.nodes[0][0];
+    Node targetNode = grid.nodes[3][3];
+
+    List<Node> openSet = new ArrayList<Node>();
+    HashSet<Node> closedSet = new HashSet<Node>();
+    openSet.add(startNode);
+
+    while (openSet.size() > 0) 
+    	{
+        	Node currentNode = openSet.get(0);
+
+        	for (int i = 1; i < openSet.size(); i++) 
+        		{
+        			Node frontier = openSet.get(i);
+
+        			if (frontier.getFCost() < currentNode.getFCost() ||
+        				frontier.getFCost() == currentNode.getFCost() &&
+            			frontier.hCost < currentNode.hCost)
+        				currentNode = frontier;
+        		}
+
+        	openSet.remove(currentNode);
+        	closedSet.add(currentNode);
+
+        	if (currentNode == targetNode)
+        	return (int)targetNode.gCost;
         
+
+        	List<Node> neighbours = grid.getNeighbours(currentNode);
+
+        	for (Node neighbour : neighbours) 
+        		{
+        			if (!closedSet.contains(neighbour)) 
+        				{
+        					double updatedGCost = currentNode.gCost + neighbour.travel_cost;
+        					if (updatedGCost < neighbour.gCost || !openSet.contains(neighbour)) 
+        						{
+        						neighbour.gCost = updatedGCost;
+        						neighbour.hCost = Node.getDistance(neighbour, targetNode);
+
+        						if (!openSet.contains(neighbour)) openSet.add(neighbour);
+        						}
+        				}
+
+
+        		}
+    	}
+
+    return 0;
+
     }
+    
 }
