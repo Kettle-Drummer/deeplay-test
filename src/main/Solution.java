@@ -54,10 +54,8 @@ public class Solution {
         	openSet.remove(currentNode);
         	closedSet.add(currentNode);
 
-        	if (currentNode == targetNode)
-        	return (int)targetNode.gCost;
-        
-
+        	if (currentNode != targetNode)
+        	{
         	List<Node> neighbours = grid.getNeighbours(currentNode);
 
         	for (Node neighbour : neighbours) 
@@ -76,9 +74,9 @@ public class Solution {
 
 
         		}
-    	}
-
-    return 0;
+        	}
+    }
+    return (int)targetNode.gCost;
 
     }
     
